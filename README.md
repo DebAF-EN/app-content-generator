@@ -1,24 +1,11 @@
 # portfolio-generator
+Here you can try to generate your own portfolio or use this application to generate a card with a description and a picture for a specific topic
 
-## Project setup
-```
-npm install
-```
+## Main features
+You can choose 5 types of blocks that will appear on your resume:
+Title, subtitle, image, list, text
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+You can also read test comments that are loaded using firebase
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### link to the project
+https://content-generator-81304.web.app

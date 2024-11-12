@@ -1,16 +1,17 @@
 <template>
   <div class="container">
-    <div class="resume-generator">
-      <app-block-generator :placeholder="getPlaceholder" @addBlock="addBlock" @changeBlockType="setBlockType" ></app-block-generator>
-      <app-block-resume :resumeElements="resumeElements"></app-block-resume>
+    <div class="content-wrapper">
+      <the-block-generator :hasDownloadImage="file" :placeholder="getPlaceholder" @addBlock="addBlock" @changeBlockType="setBlockType" ></the-block-generator>
+      <div class="card block-resume" >
+        <h2 v-if="resumeElements === 0">Добавь свой первый блок!<br> Если захочешь удалить - нажми на него</h2>
+      </div>
     </div>
     <app-comments :users="users" @loadComments="loadComments"></app-comments>
   </div>
 </template>
 
 <script>
-import AppBlockGenerator from './components/AppBlockGenerator.vue'
-import AppBlockResume from './components/AppBlockResume.vue'
+import TheBlockGenerator from './components/TheBlockGenerator.vue'
 import AppComments from './components/AppComments.vue'
 import axios from 'axios'
 
@@ -19,17 +20,23 @@ export default {
     return {
       resumeElements: 0,
       users: [],
-      blockType: 'h1'
+      blockType: 'h1',
+      file: null
     }
   },
   methods: {
     addBlock (blockType, textValue) {
-      const blockResume = document.querySelector('.resume')
+      const blockResume = document.querySelector('.block-resume')
       const newElement = document.createElement(blockType)
       newElement.classList.add('remove')
       const hr = document.createElement('hr')
       if (blockType === 'img') {
-        newElement.src = textValue
+        if (this.file) {
+          newElement.src = URL.createObjectURL(this.file)
+          this.file = null
+        } else {
+          newElement.src = textValue
+        }
         newElement.alt = 'Некорректная ссылка на изображение'
         newElement.classList.add('avatar')
         newElement.onerror = () => {
@@ -58,6 +65,9 @@ export default {
       }
       this.resumeElements += 1
     },
+    handleFileUpload (file) {
+      this.file = file
+    },
     setBlockType (blockType) {
       this.blockType = blockType
     },
@@ -79,10 +89,15 @@ export default {
       } else if (this.blockType === 'ul') {
         return 'При вводе нажимайте Enter для отделения элемента списка'
       }
-      return ''
+      return 'Введите текст'
     }
   },
-  components: { AppBlockGenerator, AppBlockResume, AppComments }
+  components: { TheBlockGenerator, AppComments },
+  provide () {
+    return {
+      emitFileUpload: this.handleFileUpload
+    }
+  }
 }
 </script>
 
